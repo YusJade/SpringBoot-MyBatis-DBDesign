@@ -25,13 +25,14 @@ public interface BookInventoryMapper {
   int deleteByPrimaryKey(Long inventoryId);
 
   @Insert({
-      "insert into tb_book_inventory (inventory_id, category_id, ",
+      "insert into tb_book_inventory (category_id, ",
       "book_title, author, ",
       "publisher, quantity)",
-      "values (#{inventoryId,jdbcType=BIGINT}, #{categoryId,jdbcType=BIGINT}, ",
+      "values (#{categoryId,jdbcType=BIGINT}, ",
       "#{bookTitle,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR}, ",
       "#{publisher,jdbcType=VARCHAR}, #{quantity,jdbcType=BIGINT})"
   })
+  @Options(keyProperty = "inventoryId", useGeneratedKeys = true)
   int insert(BookInventory record);
 
   @InsertProvider(type = BookInventorySqlProvider.class, method = "insertSelective")
