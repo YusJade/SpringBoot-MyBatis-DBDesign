@@ -1,5 +1,6 @@
 package com.yusjade.libms.service;
 
+import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.yusjade.libms.utils.PageParam;
@@ -12,8 +13,11 @@ import java.util.List;
  */
 public interface BaseService<Param, Result> {
 
+  //todo: doSelectPageInfo 无效，结果为空？
   default PageInfo<Result> page(PageParam<Param> param) {
-    return PageHelper.startPage(param).doSelectPageInfo(() -> list(param.getParam()));
+    PageHelper.startPage(param);
+    List<Result> list = list(param.getParam());
+    return new PageInfo<>(list);
   }
 
   /**

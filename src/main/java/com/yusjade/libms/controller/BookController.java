@@ -56,7 +56,7 @@ public class BookController {
     }
   }
 
-  @PutMapping("{id}")
+  @PutMapping("/{id}")
   Response<Integer> modifyBook(@PathVariable Long id, @RequestBody Book record) {
     record.setBookId(id);
     try {
@@ -67,7 +67,7 @@ public class BookController {
     }
   }
 
-  @GetMapping("{id}")
+  @GetMapping("/{id}")
   Response<Book> queryBookById(@PathVariable Long id) {
     try {
       return new Response<>(ResponseCode.SUCCESS.getCode(), "查询成功", bookService.getBookById(id));

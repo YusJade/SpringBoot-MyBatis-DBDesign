@@ -33,6 +33,9 @@ public class BookService implements BaseService<Book, Book> {
   }
 
   public Long saveBook(Book record) {
+    record.setBookId(null);
+    record.setIsBorrowed(false);
+    record.setIsDiscarded(false);
     if (bookMapper.insert(record) == 1) {
       return record.getBookId();
     }

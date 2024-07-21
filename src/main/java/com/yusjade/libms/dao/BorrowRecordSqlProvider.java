@@ -1,6 +1,9 @@
 package com.yusjade.libms.dao;
 
 import com.yusjade.libms.pojo.BorrowRecord;
+import com.yusjade.libms.service.BorrowService;
+import java.util.Map;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.jdbc.SQL;
 
 public class BorrowRecordSqlProvider {
@@ -62,6 +65,26 @@ public class BorrowRecordSqlProvider {
         
         sql.WHERE("record_id = #{recordId,jdbcType=BIGINT}");
         
+        return sql.toString();
+    }
+
+    public String selectByParamSelective(Map<String, Object> map) {
+        SQL sql = new SQL();
+        Long userId = (Long) map.get("userId");
+        Long bookId = (Long) map.get("bookId");
+        Boolean excludeFinished = (Boolean) map.get("excludeFinished");
+        sql.SELECT("record_id, user_id, book_id, borrow_date, ought_return_date, actual_return_date")
+            .FROM("tb_borrow_record");
+        if (userId != null) {
+            sql.WHERE("user_id = #{userId}");
+        }
+        if (bookId != null) {
+            sql.WHERE("book_id = #{bookId}");
+        }
+        if (excludeFinished != null && excludeFinished) {
+            sql.WHERE("actual_return_date is null");
+        }
+
         return sql.toString();
     }
 }
