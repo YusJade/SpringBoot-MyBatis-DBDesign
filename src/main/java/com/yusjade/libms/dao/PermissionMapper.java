@@ -1,6 +1,7 @@
 package com.yusjade.libms.dao;
 
 import com.yusjade.libms.pojo.Permission;
+import java.util.List;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Delete;
@@ -54,4 +55,17 @@ public interface PermissionMapper {
         "where permission_name = #{permissionName,jdbcType=VARCHAR}"
     })
     int updateByPrimaryKey(Permission record);
+
+    @Select({
+        "select",
+        "permission_name, permission_desc, max_borrow_day, max_borrow_books",
+        "from tb_permission"
+    })
+    @ConstructorArgs({
+        @Arg(column="permission_name", javaType=String.class, jdbcType=JdbcType.VARCHAR, id=true),
+        @Arg(column="permission_desc", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="max_borrow_day", javaType=Short.class, jdbcType=JdbcType.SMALLINT),
+        @Arg(column="max_borrow_books", javaType=Short.class, jdbcType=JdbcType.SMALLINT)
+    })
+    List<Permission> selectAll();
 }
