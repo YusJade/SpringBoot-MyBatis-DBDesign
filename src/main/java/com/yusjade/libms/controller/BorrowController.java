@@ -138,4 +138,27 @@ public class BorrowController {
       return Response.error("归还失败");
     }
   }
+
+  @PutMapping("/{id}/renew")
+  Response<Integer> renewBook(@PathVariable Long id) {
+    try {
+      int code = borrowService.renewBorrow(id);
+      if (code == 1) {
+        return Response.success("续借成功", code);
+      }
+      if (code == 0) {
+        return Response.error("续借失败");
+      }
+      if (code == -1) {
+        return Response.error("已归还，无法续借");
+      }
+      if (code == -2) {
+        return Response.error("已逾期，请先归还");
+      }
+      return Response.error("续借失败");
+    } catch (Exception e) {
+      log.warn(e.toString());
+      return Response.error("续借失败");
+    }
+  }
 }

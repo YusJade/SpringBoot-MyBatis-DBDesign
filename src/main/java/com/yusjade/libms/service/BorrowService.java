@@ -9,8 +9,10 @@ import com.yusjade.libms.pojo.User;
 import jakarta.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import lombok.Data;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -97,6 +99,10 @@ public class BorrowService implements BaseService<Map<String, Object>, BorrowRec
     record.setActualReturnDate(null);
     record.setOughtReturnDate(returnDate);
 
+    // 将图书设置为已被借阅
+    book.setIsBorrowed(true);
+    bookMapper.updateByPrimaryKeySelective(book);
+
     borrowRecordMapper.insert(record);
     return record.getRecordId();
   }
@@ -131,6 +137,41 @@ public class BorrowService implements BaseService<Map<String, Object>, BorrowRec
       return -1;
     }
     record.setActualReturnDate(curDate);
+    return borrowRecordMapper.updateByPrimaryKeySelective(record);
+  }
+
+  /**
+   * 续借图书，必须满足以下条件：
+   * 1.当前借阅图书属于本人且未归还
+   * 2.未到最后归还期限，否则应先归还图书
+   * todo: 增加用户鉴权，检查该记录是否属于该用户
+   * @param id
+   * @return
+   */
+  public int renewBorrow(Long id) {
+    BorrowRecord record = borrowRecordMapper.selectByPrimaryKey(id);
+    if (record == null) {
+      return 0;
+    }
+
+    /*
+    todo: 此处应该检查该记录是否属于该用户
+    */
+
+    if (record.getActualReturnDate() != null) {
+      return -1;
+    }
+    // 计算续借时是否逾期
+    Calendar calendar = Calendar.getInstance();
+    Date curDate = Date.from(calendar.toInstant());
+    Date oughtReturnDate = record.getOughtReturnDate();
+    if (curDate.compareTo(oughtReturnDate) > 0) {
+      return -2;
+    }
+    // 续期
+    calendar.add(Calendar.DATE, 30);
+    Date newOughtReturnDate = Date.from(calendar.toInstant());
+    record.setOughtReturnDate(newOughtReturnDate);
     return borrowRecordMapper.updateByPrimaryKeySelective(record);
   }
 

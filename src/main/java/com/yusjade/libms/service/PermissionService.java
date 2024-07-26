@@ -27,7 +27,7 @@ public class PermissionService implements BaseService<String, Permission> {
   }
 
   public int removePermission(String name) {
-    permissionMapper.deleteByPrimaryKey(name);
+    return permissionMapper.deleteByPrimaryKey(name);
   }
 
   public int updatePermission(Permission record) {
