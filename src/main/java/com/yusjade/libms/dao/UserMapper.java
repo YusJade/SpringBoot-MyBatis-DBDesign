@@ -2,6 +2,7 @@ package com.yusjade.libms.dao;
 
 import com.yusjade.libms.pojo.User;
 import java.util.Date;
+import java.util.List;
 import org.apache.ibatis.annotations.Arg;
 import org.apache.ibatis.annotations.ConstructorArgs;
 import org.apache.ibatis.annotations.Delete;
@@ -90,4 +91,22 @@ public interface UserMapper {
         "where user_id = #{userId,jdbcType=BIGINT}"
     })
     int updateByPrimaryKey(User record);
+
+    @Select({
+        "select",
+        "user_id, permission_name, username, password, gender, name, email, phone, created_at",
+        "from tb_user"
+    })
+    @ConstructorArgs({
+        @Arg(column="user_id", javaType=Long.class, jdbcType=JdbcType.BIGINT, id=true),
+        @Arg(column="permission_name", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="username", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="password", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="gender", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="name", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="email", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="phone", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="created_at", javaType=Date.class, jdbcType=JdbcType.TIMESTAMP)
+    })
+    List<User> selectAllUser();
 }

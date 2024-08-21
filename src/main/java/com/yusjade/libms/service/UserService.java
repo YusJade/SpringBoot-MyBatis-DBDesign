@@ -5,6 +5,7 @@ import com.yusjade.libms.dao.UserMapper;
 import com.yusjade.libms.pojo.PersonalizedInfo;
 import com.yusjade.libms.pojo.User;
 import jakarta.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,9 @@ public class UserService {
     User newUser = new User(0L, null, username, password, gender, name, email,
         phone, null);
     // @Insert 注解在方法返回1表示插入成功
+    if (userMapper.selectByUsername(username) != null) {
+      return -1L;
+    }
     return userMapper.insert(newUser) == 1 ? newUser.getUserId() : 0;
   }
 
@@ -68,6 +72,10 @@ public class UserService {
 
   public User getUserById(Long id) {
     return userMapper.selectByPrimaryKey(id);
+  }
+
+  public List<User> listAllUser() {
+    return userMapper.selectAllUser();
   }
 
   /**

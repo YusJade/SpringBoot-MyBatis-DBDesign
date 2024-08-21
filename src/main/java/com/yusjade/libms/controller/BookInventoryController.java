@@ -10,6 +10,7 @@ import jakarta.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,6 +97,9 @@ public class BookInventoryController {
       }
       return new Response<>(ResponseCode.SUCCESS.getCode(), "删除成功", 1);
     } catch (Exception e) {
+      if (e instanceof DataIntegrityViolationException) {
+        return new Response<>(ResponseCode.ERROR.getCode(), "删除失败，库存中仍有图书", null);
+      }
       return new Response<>(ResponseCode.ERROR.getCode(), "删除失败", null);
     }
   }

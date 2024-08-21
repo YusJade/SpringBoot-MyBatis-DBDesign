@@ -5,6 +5,7 @@ import com.yusjade.libms.service.UserService;
 import com.yusjade.libms.utils.Response;
 import com.yusjade.libms.utils.ResponseCode;
 import jakarta.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,5 +79,14 @@ public class UserController {
   @PutMapping("/permission/{id}")
   Response<Long> modifyPermission(@PathVariable Long id, @RequestBody String permissionName) {
     return new Response<>(ResponseCode.ERROR.getCode(), "未知错误", -1L);
+  }
+
+  @GetMapping("/list")
+  Response<List<User>> queryAllUser() {
+    try {
+      return Response.success("查询成功", userService.listAllUser());
+    } catch (Exception e) {
+      return Response.error("查询失败");
+    }
   }
 }

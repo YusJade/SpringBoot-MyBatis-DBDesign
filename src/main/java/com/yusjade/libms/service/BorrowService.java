@@ -63,6 +63,10 @@ public class BorrowService implements BaseService<Map<String, Object>, BorrowRec
 //
 //
 
+  public int remove(Long id) {
+    return borrowRecordMapper.deleteByPrimaryKey(id);
+  }
+
   /**
    * 保存借阅记录
    *

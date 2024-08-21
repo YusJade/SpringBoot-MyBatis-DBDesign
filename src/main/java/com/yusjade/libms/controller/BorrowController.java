@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -159,6 +160,20 @@ public class BorrowController {
     } catch (Exception e) {
       log.warn(e.toString());
       return Response.error("续借失败");
+    }
+  }
+
+  @DeleteMapping("/{id}")
+  Response<Integer> deleteBook(@PathVariable Long id) {
+    try {
+      int code = borrowService.remove(id);
+      if (code == 1) {
+        return Response.success("删除成功", 1);
+      }
+      return Response.error("删除失败");
+    } catch (Exception e) {
+      log.warn(e.toString());
+      return Response.error("删除失败");
     }
   }
 }
