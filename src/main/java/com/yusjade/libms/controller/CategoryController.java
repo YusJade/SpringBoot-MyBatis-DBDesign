@@ -27,7 +27,7 @@ public class CategoryController {
   CategoryService categoryService;
 
   @GetMapping("/list")
-  public Response<List<BookCategory>> queryListByKeyword(@RequestParam String keyword) {
+  public Response<List<BookCategory>> queryListByKeyword(@RequestParam(required = false, defaultValue = "") String keyword) {
     try {
       return Response.success("查询成功", categoryService.list(keyword));
     } catch (Exception e) {

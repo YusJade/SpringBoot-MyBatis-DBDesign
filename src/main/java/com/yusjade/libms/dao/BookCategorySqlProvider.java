@@ -37,8 +37,7 @@ public class BookCategorySqlProvider {
     public String selectByKeyword(@Param("keyword") String keyword) {
         SQL sql = new SQL();
         sql.SELECT("*").FROM("tb_book_category");
-        if (keyword == null || keyword == "") {
-            sql.WHERE("category_id = -1");
+        if (keyword == null || keyword.isEmpty()) {
             return sql.toString();
         }
         sql.WHERE("name like CONCAT('%', #{keyword,jdbcType=VARCHAR},'%')");
