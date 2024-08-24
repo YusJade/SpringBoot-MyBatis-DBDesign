@@ -87,4 +87,15 @@ public class BorrowRecordSqlProvider {
 
         return sql.toString();
     }
+
+    public String selectOverdueByUser(Long userId) {
+        SQL sql = new SQL();
+        sql.SELECT("record_id, b.user_id, book_id, borrow_date, ought_return_date, actual_return_date")
+            .FROM("tb_borrow_record b")
+            .JOIN("tb_user u ON u.user_id = b.user_id")
+            .WHERE("b.user_id = #{userId}")
+            .WHERE("actual_return_date IS NULL")
+            .WHERE("ought_return_date < CURRENT_DATE");
+        return sql.toString();
+    }
 }

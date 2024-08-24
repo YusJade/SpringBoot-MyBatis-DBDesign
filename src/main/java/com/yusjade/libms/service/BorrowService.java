@@ -41,28 +41,6 @@ public class BorrowService implements BaseService<Map<String, Object>, BorrowRec
         excludeFinished);
   }
 
-//  List<BorrowRecord> listBorrowByBook(Long bookId) {
-//    return borrowRecordMapper.;
-//  }
-//
-//  List<BorrowRecord> listBorrowByUser(int userId) {
-//    Map<String, Object> map = new HashMap<>();
-//    map.put("book_id", userId);
-//    return borrowDao.selectBorrow(map, true);
-//  }
-//
-//  List<Borrow> listBorrowByCategory(int categoryId) {
-//    Map<String, Object> map = new HashMap<>();
-//    map.put("book_id", categoryId);
-//    return borrowDao.selectBorrow(map, true);
-//  }
-//
-//  List<Borrow> listAllBorrow() {
-//    return borrowRecordMapper.selectByPrimaryKey();
-//  }
-//
-//
-
   public int remove(Long id) {
     return borrowRecordMapper.deleteByPrimaryKey(id);
   }
@@ -179,58 +157,12 @@ public class BorrowService implements BaseService<Map<String, Object>, BorrowRec
     return borrowRecordMapper.updateByPrimaryKeySelective(record);
   }
 
-//
-//  /**
-//   * 续借图书
-//   *
-//   * @param id 借阅记录 id
-//   * @return -3：记录不存在；-2：图书已归还，无法续借；-1：逾期； 0：系统错误或无法更新；1：成功续借
-//   */
-//  int renewBorrow(int id) {
-//    Borrow borrow = borrowDao.selectBorrowById(id);
-//    if (borrow == null) {
-//      return -3;
-//    }
-//    if (borrow.getReally_return_date() != null) {
-//      return -2; // 图书已归还，无法续借
-//    }
-//    // 计算续借时是否逾期
-//    Calendar calendar = Calendar.getInstance();
-//    Timestamp curDate = Timestamp.from(calendar.toInstant());
-//    Timestamp returnDate = borrow.getReturn_date();
-//    if (curDate.compareTo(returnDate) > 0) {
-//      return -1;
-//    }
-//    // 未逾期则续满
-//    User user = userDao.getUserById((long) borrow.getUser_id());
-//    calendar.add(Calendar.DATE, Math.toIntExact(user.getMax_borrow_days()));
-//    returnDate = Timestamp.from(calendar.toInstant());
-//    return borrowDao.updateBorrowById(
-//        Map.of("id", borrow.getId(),
-//            "return_date", returnDate));
-//  }
-//
-//  /**
-//   * 续借图书
-//   *
-//   * @param id 借阅记录 id
-//   * @return -3：记录不存在；-2：图书已归还；-1：逾期； 0：系统错误或无法更新；1：成功续借
-//   */
-//  int returnBorrow(int id) {
-//    Borrow borrow = borrowDao.selectBorrowById(id);
-//    if (borrow == null) {
-//      return -3;
-//    }
-//    if (borrow.getReally_return_date() != null) {
-//      return -2; // 图书已归还，无需再归还
-//    }
-//    Calendar calendar = Calendar.getInstance();
-//    Timestamp curDate = Timestamp.from(calendar.toInstant());
-//    if (borrow.getReturn_date().compareTo(curDate) < 0) {
-//      return -1;
-//    }
-//    return borrowDao.updateBorrowById(
-//        Map.of("id", borrow.getId(),
-//            "really_return_date", curDate));
-//  }
+  public List<BorrowRecord> listOverdueRecord(Long userId) {
+    User user = userMapper.selectByPrimaryKey(userId);
+    if (user == null) {
+      return null;
+    }
+    return borrowRecordMapper.selectOverdueByUser(userId);
+  }
+
 }

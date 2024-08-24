@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -174,6 +175,16 @@ public class BorrowController {
     } catch (Exception e) {
       log.warn(e.toString());
       return Response.error("删除失败");
+    }
+  }
+
+  @GetMapping("/overdue")
+  Response<List<BorrowRecord>> listOverdueRecord(@Param("userId") Long userId) {
+    try {
+      return Response.success("查询成功", borrowService.listOverdueRecord(userId));
+    } catch (Exception e) {
+      log.warn(e.toString());
+      return Response.error("查询失败");
     }
   }
 }

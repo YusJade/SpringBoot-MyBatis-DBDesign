@@ -81,4 +81,15 @@ public interface BorrowRecordMapper {
       @Param("userId") Long userId,
       @Param("bookId") Long bookId,
       @Param("excludeFinished") Boolean excludeFinished);
+
+  @SelectProvider(type = BorrowRecordSqlProvider.class, method = "selectOverdueByUser")
+  @ConstructorArgs({
+      @Arg(column = "record_id", javaType = Long.class, jdbcType = JdbcType.BIGINT, id = true),
+      @Arg(column = "user_id", javaType = Long.class, jdbcType = JdbcType.BIGINT),
+      @Arg(column = "book_id", javaType = Long.class, jdbcType = JdbcType.BIGINT),
+      @Arg(column = "borrow_date", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),
+      @Arg(column = "ought_return_date", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP),
+      @Arg(column = "actual_return_date", javaType = Date.class, jdbcType = JdbcType.TIMESTAMP)
+  })
+  List<BorrowRecord> selectOverdueByUser(@Param("userId") Long userId);
 }
