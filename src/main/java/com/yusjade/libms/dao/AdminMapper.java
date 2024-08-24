@@ -63,4 +63,21 @@ public interface AdminMapper {
         "where admin_id = #{adminId,jdbcType=BIGINT}"
     })
     int updateByPrimaryKey(Admin record);
+
+    @Select({
+        "select",
+        "admin_id, username, password, name, phone, email, created_at",
+        "from tb_admin",
+        "where username = #{username,jdbcType=BIGINT}"
+    })
+    @ConstructorArgs({
+        @Arg(column="admin_id", javaType=Long.class, jdbcType=JdbcType.BIGINT, id=true),
+        @Arg(column="username", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="password", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="name", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="phone", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="email", javaType=String.class, jdbcType=JdbcType.VARCHAR),
+        @Arg(column="created_at", javaType=Date.class, jdbcType=JdbcType.TIMESTAMP)
+    })
+    Admin selectByUsername(String username);
 }
